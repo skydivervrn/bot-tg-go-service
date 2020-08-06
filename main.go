@@ -21,19 +21,18 @@ func main() {
 		time.Sleep(1 * time.Second)
 		if fileExists(appOutput) {
 			err := readFile()
-			tmp := strings.Split(string(*bp), "\n")
+			tmp := strings.Split(string(*bp), "-\n")
 			if err != nil {
 				log.Printf("Error is: %s", err)
-				writeFile(strings.Join([]string{tmp[0], "READ File error", err.Error()}, "\n"))
+				writeFile(strings.Join([]string{tmp[0], "READ File error", err.Error()}, "-\n"))
 				os.Remove(appOutput)
 				continue
 			}
-			log.Printf("DEBUG: %v", tmp[1])
 			out, errw := runCommand(parseStringList(tmp[1]))
 			if errw != nil {
 				log.Printf("Command finished with error: %v", errw)
 			}
-			writeFile(strings.TrimSuffix(strings.Join([]string{tmp[0], out, ""}, "\n"), "\n"))
+			writeFile(strings.Join([]string{tmp[0], out, ""}, "-\n"))
 			os.Remove(appOutput)
 		}
 	}
