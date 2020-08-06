@@ -1,0 +1,24 @@
+[Unit]
+Description=Run command from one file and put answer to another
+After=network.target
+ 
+[Service]
+Type=simple
+
+Restart=on-failure
+RestartSec=10
+Environment=APP_OUTPUT_FILE=/var/lib/docker/volumes/bot_buffer/_data/app.output
+Environment=CMD_OUTPUT_FILE=/var/lib/docker/volumes/bot_buffer/_data/cmd.output
+
+ExecStart=/bin/cmdrunner 
+
+PermissionsStartOnly=true
+ExecStartPre=/bin/mkdir -p /var/log/cmdrunner
+ExecStartPre=/bin/chown syslog:adm /var/log/cmdrunner
+ExecStartPre=/bin/chmod 755 /var/log/cmdrunner
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=cmdrunner
+ 
+[Install]
+WantedBy=multi-user.target
